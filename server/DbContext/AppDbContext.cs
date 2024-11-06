@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using server.models;
 
 namespace server.Models
 {
@@ -9,5 +10,7 @@ namespace server.Models
         }
 
         public DbSet<UserModel> Users { get; set; }
+        public DbSet<CategoryModel> Categories { get; set; } 
+        public DbSet<ProductModel> Products { get; set; }
     }
 }
