@@ -18,6 +18,10 @@ builder.Services.AddControllers();
 // Enregistrement de UserRepository et UserService
 builder.Services.AddScoped<UserRepository>();  // <-- Enregistrement de UserRepository
 builder.Services.AddScoped<UserService>();     // <-- Enregistrement de UserService
+builder.Services.AddScoped<CategoryRepository>();  // <-- Enregistrement de UserReposito>
+builder.Services.AddScoped<CategoryService>();     // <-- Enregistrement de UserService
+builder.Services.AddScoped<ProductRepository>();  // <-- Enregistrement de Us
+builder.Services.AddScoped<ProductService>();    
 
 // Configuration de l'authentification JWT
 builder.Services.AddAuthentication(options =>
