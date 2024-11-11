@@ -1,9 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using server.Dto;
 using server.Models;
 using server.Services;
+using CloudinaryDotNet;
+using CloudinaryDotNet.Actions;
+using dotenv.net;
 
 namespace server.Controllers
 {
@@ -12,19 +16,56 @@ namespace server.Controllers
     public class ProductController : ControllerBase
     {
         private readonly ProductService _productService;
+        private readonly Cloudinary _cloudinary;
 
         public ProductController(ProductService productService)
         {
             _productService = productService;
+            DotEnv.Load();
+
+            var cloudinaryUrl = Environment.GetEnvironmentVariable("CLOUDINARY_URL");
+            if (cloudinaryUrl == null)
+            {
+                throw new InvalidOperationException("CLOUDINARY_URL is not set in environment variables.");
+            }
+
+            _cloudinary = new Cloudinary(cloudinaryUrl);
         }
 
         // CREATE : Ajouter un produit
         [HttpPost]
+        [HttpPost]
         public async Task<IActionResult> AddProduct([FromBody] ProductModel product)
         {
+            // Paramètres d'upload de l'image
+            var uploadParams = new ImageUploadParams
+            {
+                File = new FileDescription(product.Image),
+                UseFilename = true,
+                UniqueFilename = false,
+                Overwrite = true
+            };
+
+            // Tentative d'upload de l'image
+            var uploadResult = await _cloudinary.UploadAsync(uploadParams);
+
+            // Vérification si l'upload a échoué
+            if (uploadResult.StatusCode != System.Net.HttpStatusCode.OK)
+            {
+                // Retourner une erreur si l'upload échoue
+                return BadRequest(new { message = "L'upload de l'image a échoué.", details = uploadResult.Error?.Message });
+            }
+
+            // Si l'upload est réussi, mettre à jour l'URL de l'image du produit
+            product.Image = uploadResult.SecureUrl.ToString();
+
+            // Ajouter le produit dans la base de données
             var createdProduct = await _productService.AddProductAsync(product);
+
+            // Retourner une réponse 201 avec le produit créé
             return CreatedAtAction(nameof(GetProductById), new { id = createdProduct.Id }, createdProduct);
         }
+
 
         // READ : Récupérer un produit par ID
         [HttpGet("{id}")]
@@ -55,7 +96,7 @@ namespace server.Controllers
                 return BadRequest();
             }
 
-            var updatedProduct = await _productService.UpdateProductAsync(id,product);
+            var updatedProduct = await _productService.UpdateProductAsync(id, product);
             if (updatedProduct == null)
             {
                 return NotFound();

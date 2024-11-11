@@ -5,6 +5,11 @@ using server.Models;
 using server.Services;
 using server.Repositories;  // <-- Ajouter cet import
 using System.Text;
+using dotenv.net;
+
+DotEnv.Load();
+
+
 
 var builder = WebApplication.CreateBuilder(args);
 
