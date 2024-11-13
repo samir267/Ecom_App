@@ -78,5 +78,14 @@ namespace server.Services
 
             await _userRepository.DeleteUserAsync(id);
         }
+        public async Task<bool> CheckUserExistsByIdAsync(int userId)
+        {
+            // Check if a user with the given userId exists
+            var user = await _userRepository.GetUserByIdAsync(userId);
+
+            // Return true if the user exists, otherwise false
+            return user != null;
+        }
+
     }
 }

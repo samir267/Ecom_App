@@ -3,8 +3,13 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using server.Models;
 using server.Services;
-using server.Repositories;  // <-- Ajouter cet import
+using server.Repositories;
 using System.Text;
+using back_wachify.Data_Layer;
+using AutoMapper;
+using static server.interfaces.ICartRepositry;
+using server.interfaces;
+using System.Text.Json.Serialization;
 using dotenv.net;
 
 DotEnv.Load();
@@ -13,22 +18,33 @@ DotEnv.Load();
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Configuration de la chaîne de connexion pour AppDbContext
+// Configure connection string for AppDbContext
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // Ajout des services pour le contrôle API
 builder.Services.AddControllers();
 
-// Enregistrement de UserRepository et UserService
-builder.Services.AddScoped<UserRepository>();  // <-- Enregistrement de UserRepository
-builder.Services.AddScoped<UserService>();     // <-- Enregistrement de UserService
-builder.Services.AddScoped<CategoryRepository>();  // <-- Enregistrement de UserReposito>
-builder.Services.AddScoped<CategoryService>();     // <-- Enregistrement de UserService
-builder.Services.AddScoped<ProductRepository>();  // <-- Enregistrement de Us
-builder.Services.AddScoped<ProductService>();    
+// Register repositories and services
+builder.Services.AddScoped<UserRepository>();
+builder.Services.AddScoped<UserService>();
+builder.Services.AddScoped<CategoryRepository>();
+builder.Services.AddScoped<CategoryService>();
+builder.Services.AddScoped<ProductRepository>();
+builder.Services.AddScoped<ProductService>();
+builder.Services.AddScoped<ICartRepositry, CartRepository>();
+builder.Services.AddScoped<ICartService, CartService>();
+builder.Services.AddScoped<IOrderService, OrderService>();
+builder.Services.AddScoped<IOrderRepository, OrderRepository>();
 
-// Configuration de l'authentification JWT
+// In ConfigureServices method in Startup.cs or directly in Program.cs if using minimal APIs
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
+    });
+
+// Configure JWT authentication
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -49,14 +65,22 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
-// Ajouter Swagger/OpenAPI pour la documentation d'API
+// Add Swagger/OpenAPI for API documentation
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// Construction de l'application
+// Configure AutoMapper with the MappingProfile
+var mapperConfig = new MapperConfiguration(mc =>
+{
+    mc.AddProfile(new MappingProfile());
+});
+IMapper mapper = mapperConfig.CreateMapper();
+builder.Services.AddSingleton(mapper);
+
+// Build the application
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// Configure the HTTP request pipeline
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -65,11 +89,11 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-// Utilisation de l'authentification et de l'autorisation
+// Use authentication and authorization
 app.UseAuthentication();
 app.UseAuthorization();
 
-// Mapping des routes des contrôleurs
+// Map controller routes
 app.MapControllers();
 
 app.Run();
