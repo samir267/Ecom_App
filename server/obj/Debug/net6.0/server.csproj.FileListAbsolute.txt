@@ -75,7 +75,6 @@ C:\Users\samir\Desktop\dmwm\Projet_Integration\server\bin\Debug\net6.0\Microsoft
 C:\Users\samir\Desktop\dmwm\Projet_Integration\server\bin\Debug\net6.0\Microsoft.Extensions.Identity.Stores.dll
 C:\Users\samir\Desktop\dmwm\Projet_Integration\server\bin\Debug\net6.0\BCrypt.Net-Next.dll
 C:\Users\samir\Desktop\dmwm\Projet_Integration\server\obj\Debug\net6.0\server.sourcelink.json
-<<<<<<< HEAD
 C:\Users\skander\Desktop\dmwm\Integration\Ecom_App\server\bin\Debug\net6.0\appsettings.Development.json
 C:\Users\skander\Desktop\dmwm\Integration\Ecom_App\server\bin\Debug\net6.0\appsettings.json
 C:\Users\skander\Desktop\dmwm\Integration\Ecom_App\server\bin\Debug\net6.0\server.exe
@@ -156,7 +155,6 @@ C:\Users\skander\Desktop\dmwm\Integration\Ecom_App\server\obj\Debug\net6.0\ref\s
 C:\Users\skander\Desktop\dmwm\Integration\Ecom_App\server\bin\Debug\net6.0\CloudinaryDotNet.dll
 C:\Users\skander\Desktop\dmwm\Integration\Ecom_App\server\bin\Debug\net6.0\dotenv.net.dll
 C:\Users\skander\Desktop\dmwm\Integration\Ecom_App\server\bin\Debug\net6.0\Newtonsoft.Json.dll
-=======
 C:\Users\dell\Desktop\courses\projects\Ecom_App\server\bin\Debug\net6.0\appsettings.Development.json
 C:\Users\dell\Desktop\courses\projects\Ecom_App\server\bin\Debug\net6.0\appsettings.json
 C:\Users\dell\Desktop\courses\projects\Ecom_App\server\bin\Debug\net6.0\server.exe
@@ -165,7 +163,6 @@ C:\Users\dell\Desktop\courses\projects\Ecom_App\server\bin\Debug\net6.0\server.r
 C:\Users\dell\Desktop\courses\projects\Ecom_App\server\bin\Debug\net6.0\server.dll
 C:\Users\dell\Desktop\courses\projects\Ecom_App\server\bin\Debug\net6.0\server.pdb
 C:\Users\dell\Desktop\courses\projects\Ecom_App\server\bin\Debug\net6.0\BCrypt.Net-Next.dll
-C:\Users\dell\Desktop\courses\projects\Ecom_App\server\bin\Debug\net6.0\Humanizer.dll
 C:\Users\dell\Desktop\courses\projects\Ecom_App\server\bin\Debug\net6.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
 C:\Users\dell\Desktop\courses\projects\Ecom_App\server\bin\Debug\net6.0\Microsoft.AspNetCore.Cryptography.Internal.dll
 C:\Users\dell\Desktop\courses\projects\Ecom_App\server\bin\Debug\net6.0\Microsoft.AspNetCore.Cryptography.KeyDerivation.dll
@@ -173,7 +170,6 @@ C:\Users\dell\Desktop\courses\projects\Ecom_App\server\bin\Debug\net6.0\Microsof
 C:\Users\dell\Desktop\courses\projects\Ecom_App\server\bin\Debug\net6.0\Microsoft.Data.SqlClient.dll
 C:\Users\dell\Desktop\courses\projects\Ecom_App\server\bin\Debug\net6.0\Microsoft.EntityFrameworkCore.dll
 C:\Users\dell\Desktop\courses\projects\Ecom_App\server\bin\Debug\net6.0\Microsoft.EntityFrameworkCore.Abstractions.dll
-C:\Users\dell\Desktop\courses\projects\Ecom_App\server\bin\Debug\net6.0\Microsoft.EntityFrameworkCore.Design.dll
 C:\Users\dell\Desktop\courses\projects\Ecom_App\server\bin\Debug\net6.0\Microsoft.EntityFrameworkCore.Relational.dll
 C:\Users\dell\Desktop\courses\projects\Ecom_App\server\bin\Debug\net6.0\Microsoft.EntityFrameworkCore.SqlServer.dll
 C:\Users\dell\Desktop\courses\projects\Ecom_App\server\bin\Debug\net6.0\Microsoft.Extensions.Caching.Memory.dll
@@ -250,4 +246,7 @@ C:\Users\dell\Desktop\courses\projects\Ecom_App\server\bin\Debug\net6.0\itext.co
 C:\Users\dell\Desktop\courses\projects\Ecom_App\server\bin\Debug\net6.0\Microsoft.DotNet.PlatformAbstractions.dll
 C:\Users\dell\Desktop\courses\projects\Ecom_App\server\bin\Debug\net6.0\Microsoft.Extensions.DependencyModel.dll
 C:\Users\dell\Desktop\courses\projects\Ecom_App\server\bin\Debug\net6.0\Newtonsoft.Json.dll
->>>>>>> ba44138 (order)
+C:\Users\dell\Desktop\courses\projects\Ecom_App\server\bin\Debug\net6.0\CloudinaryDotNet.dll
+C:\Users\dell\Desktop\courses\projects\Ecom_App\server\bin\Debug\net6.0\dotenv.net.dll
+C:\Users\dell\Desktop\courses\projects\Ecom_App\server\bin\Debug\net6.0\Humanizer.dll
+C:\Users\dell\Desktop\courses\projects\Ecom_App\server\bin\Debug\net6.0\Microsoft.EntityFrameworkCore.Design.dll
