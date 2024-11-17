@@ -13,11 +13,11 @@ DotEnv.Load();
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Configuration de la chaîne de connexion pour AppDbContext
+// Configuration de la chaï¿½ne de connexion pour AppDbContext
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// Ajout des services pour le contrôle API
+// Ajout des services pour le contrï¿½le API
 builder.Services.AddControllers();
 
 // Enregistrement de UserRepository et UserService
@@ -26,7 +26,9 @@ builder.Services.AddScoped<UserService>();     // <-- Enregistrement de UserServ
 builder.Services.AddScoped<CategoryRepository>();  // <-- Enregistrement de UserReposito>
 builder.Services.AddScoped<CategoryService>();     // <-- Enregistrement de UserService
 builder.Services.AddScoped<ProductRepository>();  // <-- Enregistrement de Us
-builder.Services.AddScoped<ProductService>();    
+builder.Services.AddScoped<ProductService>();
+builder.Services.AddScoped<ReviewRepository>();
+builder.Services.AddScoped<ReviewService>();
 
 // Configuration de l'authentification JWT
 builder.Services.AddAuthentication(options =>
@@ -69,7 +71,7 @@ app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 
-// Mapping des routes des contrôleurs
+// Mapping des routes des contrï¿½leurs
 app.MapControllers();
 
 app.Run();

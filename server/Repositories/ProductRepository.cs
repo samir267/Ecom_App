@@ -16,14 +16,25 @@ namespace server.Repositories
         }
 
         // CREATE : Ajouter un nouveau produit
-        public async Task<ProductModel> AddProductAsync(ProductModel product)
+        public async Task<ProductModel> AddProductAsync(ProductDto productDto)
         {
             // Vérifiez si la catégorie et l'utilisateur existent
-            if (!await _context.Categories.AnyAsync(c => c.Id == product.CategoryId) ||
-                !await _context.Users.AnyAsync(u => u.Id == product.UserId))
+            if (!await _context.Categories.AnyAsync(c => c.Id == productDto.CategoryId) ||
+                !await _context.Users.AnyAsync(u => u.Id == productDto.UserId))
             {
                 return null; // La catégorie ou l'utilisateur n'existe pas
             }
+
+            var product = new ProductModel
+            {
+                Name = productDto.Name,
+                Description = productDto.Description,
+                Quantity = productDto.Quantity,
+                Price = productDto.Price,
+                CategoryId = productDto.CategoryId,
+                UserId = productDto.UserId,
+                Image = productDto.Image  // Ajouté ici
+            };
 
             _context.Products.Add(product);
             await _context.SaveChangesAsync();
@@ -52,15 +63,11 @@ namespace server.Repositories
             }
 
             // Mettez à jour uniquement les propriétés fournies
-                existingProduct.Name = productDto.Name;
-
-                existingProduct.Description = productDto.Description;
-
-                existingProduct.Quantity = productDto.Quantity;
-
-                existingProduct.Image = productDto.Image;
-
-                existingProduct.Price = productDto.Price;
+            existingProduct.Name = productDto.Name;
+            existingProduct.Description = productDto.Description;
+            existingProduct.Quantity = productDto.Quantity;
+            existingProduct.Image = productDto.Image;
+            existingProduct.Price = productDto.Price;
 
             // Enregistrez les modifications
             await _context.SaveChangesAsync();
@@ -79,6 +86,14 @@ namespace server.Repositories
             _context.Products.Remove(product);
             await _context.SaveChangesAsync();
             return true;
+        }
+
+        // Lire un produit avec ses avis
+        public async Task<ProductModel> GetProductWithReviewsAsync(int id)
+        {
+            return await _context.Products
+                                 .Include(p => p.Reviews)
+                                 .FirstOrDefaultAsync(p => p.Id == id);
         }
     }
 }

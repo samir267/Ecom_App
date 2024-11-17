@@ -1,5 +1,7 @@
 import 'package:ecom/main.dart';
+import 'package:ecom/screens/cart.dart';
 import 'package:ecom/screens/profile.dart';
+import 'package:ecom/screens/updateprofile.dart';
 import 'package:flutter/material.dart';
 import 'package:ecom/screens/home.dart';
 import 'package:ecom/screens/login.dart';
@@ -11,6 +13,9 @@ class AppRoutes {
   static const String home = '/home';
   static const String registre = '/registre';
   static const String profile = '/profile';
+  static const String updateprofile = '/updateprofile';
+  static const String cartscreen = '/cartscreen';
+
 
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -29,8 +34,14 @@ class AppRoutes {
       case profile:
         return MaterialPageRoute(builder: (_) => const ProfileScreen());
       
+      case updateprofile:
+        return MaterialPageRoute(builder: (_) => const UpdateProfileScreen());
+      
+      case cartscreen:
+        return MaterialPageRoute(builder: (_) => CartPage());
+      
       default:
-        return MaterialPageRoute(builder: (_) => const SignupPage  ());
+        return MaterialPageRoute(builder: (_) => const ProfileScreen  ());
     }
   }
 }

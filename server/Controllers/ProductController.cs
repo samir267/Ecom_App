@@ -1,119 +1,97 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using CloudinaryDotNet.Actions;
+using CloudinaryDotNet;
 using Microsoft.AspNetCore.Mvc;
-using server.Dto;
+using server.Dto;  // Import ProductDto
+using System.IO;
 using server.Models;
 using server.Services;
-using CloudinaryDotNet;
-using CloudinaryDotNet.Actions;
-using dotenv.net;
 
-namespace server.Controllers
+[ApiController]
+[Route("api/[controller]")]
+public class ProductController : ControllerBase
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class ProductController : ControllerBase
+    private readonly Cloudinary _cloudinary;
+    private readonly ProductService _productService;
+
+    public ProductController(Cloudinary cloudinary, ProductService productService)
     {
-        private readonly ProductService _productService;
-        private readonly Cloudinary _cloudinary;
+        _cloudinary = cloudinary;
+        _productService = productService;
+    }
 
-        public ProductController(ProductService productService)
+    // Ajouter un produit avec une image
+    [HttpPost]
+    [Consumes("multipart/form-data")]
+    public async Task<IActionResult> AddProduct(
+     [FromForm] string name,
+     [FromForm] string description,
+     [FromForm] int quantity,
+     [FromForm] decimal price,
+     [FromForm] int categoryId,
+     [FromForm] int userId,
+     [FromForm] IFormFile image)
+    {
+        if (image == null || image.Length == 0)
         {
-            _productService = productService;
-            DotEnv.Load();
-
-            var cloudinaryUrl = Environment.GetEnvironmentVariable("CLOUDINARY_URL");
-            if (cloudinaryUrl == null)
-            {
-                throw new InvalidOperationException("CLOUDINARY_URL is not set in environment variables.");
-            }
-
-            _cloudinary = new Cloudinary(cloudinaryUrl);
+            return BadRequest(new { message = "Aucune image n'a été envoyée." });
         }
 
-        // CREATE : Ajouter un produit
-        [HttpPost]
-        [HttpPost]
-        public async Task<IActionResult> AddProduct([FromBody] ProductModel product)
+        // Paramètres pour l'upload sur Cloudinary
+        var uploadParams = new ImageUploadParams
         {
-            // Paramètres d'upload de l'image
-            var uploadParams = new ImageUploadParams
-            {
-                File = new FileDescription(product.Image),
-                UseFilename = true,
-                UniqueFilename = false,
-                Overwrite = true
-            };
+            File = new FileDescription(image.FileName, image.OpenReadStream()),
+            UseFilename = true,
+            UniqueFilename = true,
+            Overwrite = false
+        };
 
-            // Tentative d'upload de l'image
-            var uploadResult = await _cloudinary.UploadAsync(uploadParams);
+        // Upload de l'image sur Cloudinary
+        var uploadResult = await _cloudinary.UploadAsync(uploadParams);
 
-            // Vérification si l'upload a échoué
-            if (uploadResult.StatusCode != System.Net.HttpStatusCode.OK)
-            {
-                // Retourner une erreur si l'upload échoue
-                return BadRequest(new { message = "L'upload de l'image a échoué.", details = uploadResult.Error?.Message });
-            }
-
-            // Si l'upload est réussi, mettre à jour l'URL de l'image du produit
-            product.Image = uploadResult.SecureUrl.ToString();
-
-            // Ajouter le produit dans la base de données
-            var createdProduct = await _productService.AddProductAsync(product);
-
-            // Retourner une réponse 201 avec le produit créé
-            return CreatedAtAction(nameof(GetProductById), new { id = createdProduct.Id }, createdProduct);
+        if (uploadResult.StatusCode != System.Net.HttpStatusCode.OK)
+        {
+            return BadRequest(new { message = "L'upload de l'image a échoué.", details = uploadResult.Error?.Message });
         }
 
-
-        // READ : Récupérer un produit par ID
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetProductById(int id)
+        // Crée le produit à partir des informations
+        var productDto = new ProductDto
         {
-            var product = await _productService.GetProductByIdAsync(id);
-            if (product == null)
-            {
-                return NotFound();
-            }
-            return Ok(product);
-        }
+            Name = name,
+            Description = description,
+            Quantity = quantity,
+            Price = price,
+            CategoryId = categoryId,
+            UserId = userId,
+            Image = uploadResult.SecureUrl.ToString()
+        };
 
-        // READ : Récupérer tous les produits
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<ProductModel>>> GetAllProducts()
-        {
-            var products = await _productService.GetAllProductsAsync();
-            return Ok(products);
-        }
+        // Ajouter le produit dans la base de données
+        var createdProduct = await _productService.AddProductAsync(productDto);
 
-        // UPDATE : Mettre à jour un produit
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateProduct(int id, [FromBody] UpdateProductDto product)
-        {
-            if (product == null)
-            {
-                return BadRequest();
-            }
+        return CreatedAtAction(nameof(GetProductById), new { id = createdProduct.Id }, createdProduct);
+    }
 
-            var updatedProduct = await _productService.UpdateProductAsync(id, product);
-            if (updatedProduct == null)
-            {
-                return NotFound();
-            }
-            return Ok(updatedProduct);
-        }
+    // Récupérer un produit par son Id
+    [HttpGet("{id}")]
+    public async Task<ActionResult<ProductModel>> GetProductById(int id)
+    {
+        var product = await _productService.GetProductByIdAsync(id);
+        return product == null ? NotFound() : Ok(product);
+    }
 
-        // DELETE : Supprimer un produit
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteProduct(int id)
-        {
-            var result = await _productService.DeleteProductAsync(id);
-            if (!result)
-            {
-                return NotFound();
-            }
-            return NoContent();
-        }
+    // Récupérer tous les produits
+    [HttpGet]
+    public async Task<ActionResult<IEnumerable<ProductModel>>> GetAllProducts()
+    {
+        var products = await _productService.GetAllProductsAsync();
+        return Ok(products);
+    }
+
+    // Récupérer un produit avec ses avis
+    [HttpGet("{id}/reviews")]
+    public async Task<ActionResult<ProductModel>> GetProductWithReviews(int id)
+    {
+        var product = await _productService.GetProductWithReviewsAsync(id);
+        return product == null ? NotFound() : Ok(product);
     }
 }

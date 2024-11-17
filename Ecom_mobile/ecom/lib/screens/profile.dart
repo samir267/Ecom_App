@@ -7,7 +7,7 @@ class ProfileScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor:Color(0xFFCF0EBE),
+backgroundColor: Colors.blue.shade700, // Remplacer la couleur
         elevation: 0,
         title: const Text("Profile", style: TextStyle(fontSize: 22)),
         centerTitle: true,
@@ -47,7 +47,7 @@ class ProfileScreen extends StatelessWidget {
                       icon: Icons.edit,
                       title: "Update Profile",
                       onTap: () {
-                        Navigator.pushNamed(context, "/settings");
+                        Navigator.pushNamed(context, "/updateprofile");
                       },
                     ),
                     ProfileMenuListTile(

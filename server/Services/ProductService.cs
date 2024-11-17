@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using server.Dto;
-using server.models;
 using server.Models;
 using server.Repositories;
 
@@ -16,9 +15,9 @@ namespace server.Services
             _productRepository = productRepository;
         }
 
-        public async Task<ProductModel> AddProductAsync(ProductModel product)
+        public async Task<ProductModel> AddProductAsync(ProductDto productDto)
         {
-            return await _productRepository.AddProductAsync(product);
+            return await _productRepository.AddProductAsync(productDto);
         }
 
         public async Task<ProductModel> GetProductByIdAsync(int id)
@@ -31,14 +30,19 @@ namespace server.Services
             return await _productRepository.GetAllProductsAsync();
         }
 
-        public async Task<ProductModel> UpdateProductAsync(int id ,UpdateProductDto product)
+        public async Task<ProductModel> UpdateProductAsync(int id, UpdateProductDto product)
         {
-            return await _productRepository.UpdateProductAsync(id,product);
+            return await _productRepository.UpdateProductAsync(id, product);
         }
 
         public async Task<bool> DeleteProductAsync(int id)
         {
             return await _productRepository.DeleteProductAsync(id);
+        }
+
+        public async Task<ProductModel> GetProductWithReviewsAsync(int id)
+        {
+            return await _productRepository.GetProductWithReviewsAsync(id);
         }
     }
 }
