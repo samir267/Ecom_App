@@ -1,10 +1,152 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
 import LogoDark from '../../images/logo/logo-dark.svg';
 import Logo from '../../images/logo/logo.svg';
+import { PartnerFormData } from './PartnerFormData';
+import axios from 'axios';
 
 const SignUp: React.FC = () => {
+  const [isLoading, setIsLoading] = useState(false);
+
+  const confirmPassword = "";
+
+  const [formValues, setFormValues] = useState<PartnerFormData>({
+    Username: '',
+    Email: '',
+    Address: '',
+    Phone: '',
+    Password: '',
+    Role: 1,
+  });
+
+  const [errors, setErrors] = useState({
+    name: '',
+    email: '',
+    address: '',
+    phoneNumber: '',
+    password: '',
+  });
+
+  const [showError, setShowError] = useState<boolean>(false);
+  const [showSuccess, setShowSuccess] = useState<boolean>(false);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormValues((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
+  };
+
+  const validateForm = () => {
+    let formErrors = {};
+    let formIsValid = true;
+
+    // Name validation
+    if (!formValues.Username) {
+      formIsValid = false;
+      formErrors.name = 'Name is required';
+    } else {
+      formErrors.name = ''; // Clear error if the field is filled
+    }
+
+    // Email validation
+    if (!formValues.Email) {
+      formIsValid = false;
+      formErrors.email = 'Email is required';
+    } else if (!/\S+@\S+\.\S+/.test(formValues.Email)) {
+      formIsValid = false;
+      formErrors.email = 'Email is not valid';
+    } else {
+      formErrors.email = ''; // Clear error if the field is filled and valid
+    }
+
+    // Address validation
+    if (!formValues.Address) {
+      formIsValid = false;
+      formErrors.address = 'Address is required';
+    } else {
+      formErrors.address = ''; // Clear error if the field is filled
+    }
+
+    // Phone number validation
+    if (!formValues.Phone) {
+      formIsValid = false;
+      formErrors.phoneNumber = 'Phone number is required';
+    } else if (!/^\d{8}$/.test(formValues.Phone)) {
+      formIsValid = false;
+      formErrors.phoneNumber = 'Phone number must be 8 digits';
+    } else {
+      formErrors.phoneNumber = ''; // Clear error if the field is filled and valid
+    }
+
+    // Password validation
+    if (!formValues.Password) {
+      formIsValid = false;
+      formErrors.password = 'Password is required';
+    } else if (formValues.Password.length < 6) {
+      formIsValid = false;
+      formErrors.password = 'Password must be at least 6 characters long';
+    } else {
+      formErrors.password = ''; // Clear error if the field is filled and valid
+    }
+
+
+
+    setErrors(formErrors);
+    return formIsValid;
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+   
+    if (validateForm()) {
+      try {
+        const response = await axios.post(
+          'https://localhost:7223/api/User/Register',
+          formValues
+        );
+        setIsLoading(true);
+
+    
+        setTimeout(() => {
+          setIsLoading(false);
+          setShowError(false);
+        setShowSuccess(true);
+        }, 2000); 
+        
+
+        console.log('Registration Successful:', response.data);
+
+      } catch (error) {
+        console.error('Error during registration:', error);
+        setIsLoading(true);
+
+    
+        setTimeout(() => {
+          setIsLoading(false);
+          setShowError(true);
+        setShowSuccess(false);
+        }, 2000); 
+        
+
+      }
+
+    } else {
+      console.log('Form has errors');
+      setIsLoading(true);
+
+    
+      setTimeout(() => {
+        setIsLoading(false);
+        setShowError(true);
+        setShowSuccess(false);
+      }, 2000); 
+     
+    }
+  };
+
   const location = useLocation();
 
   const isSignInPage = location.pathname === '/auth/signup';
@@ -13,30 +155,29 @@ const SignUp: React.FC = () => {
     <div className="container mx-auto h-screen">
 
       <header className="flex flex-row-reverse my-3 ">
-        
-          <div className='px-2'>
 
-            <Link
-              to="/auth/signup"
-              className={`inline-flex items-center justify-center rounded-md border py-4 px-10 text-center font-medium lg:px-8 xl:px-10 ${
-                isSignInPage ? 'bg-primary text-white' : 'border-primary text-primary hover:bg-opacity-90'
+        <div className='px-2'>
+
+          <Link
+            to="/auth/signup"
+            className={`inline-flex items-center justify-center rounded-md border py-4 px-10 text-center font-medium lg:px-8 xl:px-10 ${isSignInPage ? 'bg-primary text-white' : 'border-primary text-primary hover:bg-opacity-90'
               }`}            >
-              SignUp
-            </Link>
+            SignUp
+          </Link>
 
-          </div>
-          <div>
-        <Link
-          to="/auth/signin"
-          className="inline-flex items-center justify-center rounded-md border border-primary py-4 px-10 text-center font-medium text-primary hover:bg-opacity-90 lg:px-8 xl:px-10"
+        </div>
+        <div>
+          <Link
+            to="/auth/signin"
+            className="inline-flex items-center justify-center rounded-md border border-primary py-4 px-10 text-center font-medium text-primary hover:bg-opacity-90 lg:px-8 xl:px-10"
 
-          
-        >
-          SignIn
-        </Link>
-      </div>
 
-        
+          >
+            SignIn
+          </Link>
+        </div>
+
+
       </header>
 
 
@@ -185,8 +326,49 @@ const SignUp: React.FC = () => {
                 <h2 className="mb-9 text-2xl font-bold text-black dark:text-white sm:text-title-xl2">
                   Sign Up to TailAdmin
                 </h2>
+                {isLoading && (
+        <div className="flex items-center justify-center">
+          <div className="w-12 h-12 border-4 border-blue-500 border-t-transparent border-solid rounded-full animate-spin"></div>
+        </div>
+      )}
+                {/* Success Alert */}
+                {showSuccess && (
+                  <div className="flex w-full border-l-6 border-[#34D399] bg-[#34D399] bg-opacity-[15%] px-7 py-8 shadow-md dark:bg-[#1B1B24] dark:bg-opacity-30 md:p-9">
+                    <div className="mr-5 flex h-9 w-full max-w-[36px] items-center justify-center rounded-lg bg-[#34D399]">
+                      <svg width="16" height="12" viewBox="0 0 16 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path
+                          d="M15.2984 0.826822L15.2868 0.811827L15.2741 0.797751C14.9173 0.401867 14.3238 0.400754 13.9657 0.794406L5.91888 9.45376L2.05667 5.2868C1.69856 4.89287 1.10487 4.89389 0.747996 5.28987C0.417335 5.65675 0.417335 6.22337 0.747996 6.59026L0.747959 6.59029L0.752701 6.59541L4.86742 11.0348C5.14445 11.3405 5.52858 11.5 5.89581 11.5C6.29242 11.5 6.65178 11.3355 6.92401 11.035L15.2162 2.11161C15.5833 1.74452 15.576 1.18615 15.2984 0.826822Z"
+                          fill="white"
+                          stroke="white"
+                        ></path>
+                      </svg>
+                    </div>
+                    <div className="w-full">
+                      <h5 className="mb-3 text-lg font-semibold text-black dark:text-[#34D399] ">
+                        Register Successfully
+                      </h5>
+                      
+                    </div>
+                  </div>
+                )}
+                {showError && (
+                  <div className="flex w-full border-l-6 border-[#F87171] bg-[#F87171] bg-opacity-[15%] px-7 py-8 shadow-md dark:bg-[#1B1B24] dark:bg-opacity-30 md:p-9">
+                    <div className="mr-5 flex h-9 w-full max-w-[36px] items-center justify-center rounded-lg bg-[#F87171]">
+                      <svg width="13" height="13" viewBox="0 0 13 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path
+                          d="M6.4917 7.65579L11.106 12.2645C11.2545 12.4128 11.4715 12.5 11.6738 12.5C11.8762 12.5 12.0931 12.4128 12.2416 12.2645C12.5621 11.9445 12.5623 11.4317 12.2423 11.1114C12.2422 11.1113 12.2422 11.1113 12.2422 11.1113C12.242 11.1111 12.2418 11.1109 12.2416 11.1107L7.64539 6.50351L12.2589 1.91221L12.2595 1.91158C12.5802 1.59132 12.5802 1.07805 12.2595 0.757793C11.9393 0.437994 11.4268 0.437869 11.1064 0.757418C11.1063 0.757543 11.1062 0.757668 11.106 0.757793L6.49234 5.34931L1.89459 0.740581L1.89396 0.739942C1.57364 0.420019 1.0608 0.420019 0.740487 0.739944C0.42005 1.05999 0.419837 1.57279 0.73985 1.89309L6.4917 7.65579ZM6.4917 7.65579L1.89459 12.2639L1.89395 12.2645C1.74546 12.4128 1.52854 12.5 1.32616 12.5C1.12377 12.5 0.906853 12.4128 0.758361 12.2645L1.1117 11.9108L0.758358 12.2645C0.437984 11.9445 0.437708 11.4319 0.757539 11.1116C0.757812 11.1113 0.758086 11.111 0.75836 11.1107L5.33864 6.50287L0.740487 1.89373L6.4917 7.65579Z"
+                          fill="#ffffff"
+                          stroke="#ffffff"
+                        ></path>
+                      </svg>
+                    </div>
+                    <div className="w-full">
+                      <h5 className="mb-3 font-semibold text-[#B45454]">There were errors with your submission</h5>
 
-                <form>
+                    </div>
+                  </div>
+                )}
+                <form onSubmit={handleSubmit}>
                   <div className="mb-4">
                     <label className="mb-2.5 block font-medium text-black dark:text-white">
                       Name
@@ -194,9 +376,13 @@ const SignUp: React.FC = () => {
                     <div className="relative">
                       <input
                         type="text"
+                        name="Username"
+                        value={formValues.Username}
+                        onChange={handleChange}
                         placeholder="Enter your full name"
-                        className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+                        className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary"
                       />
+                      {errors.name && <p className="text-red-500 text-sm">{errors.name}</p>}
 
                       <span className="absolute right-4 top-4">
                         <svg
@@ -229,9 +415,13 @@ const SignUp: React.FC = () => {
                     <div className="relative">
                       <input
                         type="email"
+                        name="Email"
+                        value={formValues.Email}
+                        onChange={handleChange}
                         placeholder="Enter your email"
-                        className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+                        className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary"
                       />
+                      {errors.email && <p className="text-red-500 text-sm">{errors.email}</p>}
 
                       <span className="absolute right-4 top-4">
                         <svg
@@ -253,6 +443,50 @@ const SignUp: React.FC = () => {
                     </div>
                   </div>
 
+
+
+                  <div className="mb-4">
+                    <label className="mb-2.5 block font-medium text-black dark:text-white">Address</label>
+                    <div className="relative">
+                      <input
+                        type="text"
+                        name="Address"
+                        value={formValues.Address}
+                        onChange={handleChange}
+                        placeholder="Enter your address"
+                        className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+                      />
+                      {errors.address && <p className="text-red-500 text-sm">{errors.address}</p>}
+
+                      <span className="absolute right-4 top-4">
+                        <svg className="fill-current" width="22" height="22" viewBox="0 0 22 22" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M12 2C8.69 2 6 4.69 6 8c0 1.64.66 3.17 1.73 4.27L11 18l3.27-5.73C15.34 11.17 16 9.64 16 8c0-3.31-2.69-6-6-6zm0 12l-3.3-5.64C8.47 9.72 9.22 9 10 9c.78 0 1.53.72 1.3 1.36L12 13zm0-6c-.55 0-1 .45-1 1s.45 1 1 1 1-.45 1-1-.45-1-1-1z" />
+                        </svg>
+                      </span>
+                    </div>
+                  </div>
+
+
+                  <div className="mb-4">
+                    <label className="mb-2.5 block font-medium text-black dark:text-white">Phone Number</label>
+                    <div className="relative">
+                      <input
+                        type="text"
+                        name="Phone"
+                        value={formValues.Phone}
+                        onChange={handleChange}
+                        placeholder="Enter your phone number"
+                        className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary"
+                      />
+                      {errors.phoneNumber && <p className="text-red-500 text-sm">{errors.phoneNumber}</p>}
+                      <span className="absolute right-4 top-4">
+                        <svg className="fill-current" width="22" height="22" viewBox="0 0 22 22" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M12 2C8.69 2 6 4.69 6 8c0 1.64.66 3.17 1.73 4.27L11 18l3.27-5.73C15.34 11.17 16 9.64 16 8c0-3.31-2.69-6-6-6zm0 12l-3.3-5.64C8.47 9.72 9.22 9 10 9c.78 0 1.53.72 1.3 1.36L12 13zm0-6c-.55 0-1 .45-1 1s.45 1 1 1 1-.45 1-1-.45-1-1-1z" />
+                        </svg>
+                      </span>
+                    </div>
+                  </div>
+
                   <div className="mb-4">
                     <label className="mb-2.5 block font-medium text-black dark:text-white">
                       Password
@@ -260,9 +494,13 @@ const SignUp: React.FC = () => {
                     <div className="relative">
                       <input
                         type="password"
+                        name="Password"
+                        value={formValues.Password}
+                        onChange={handleChange}
                         placeholder="Enter your password"
-                        className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+                        className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary"
                       />
+                      {errors.password && <p className="text-red-500 text-sm">{errors.password}</p>}
 
                       <span className="absolute right-4 top-4">
                         <svg
@@ -288,40 +526,6 @@ const SignUp: React.FC = () => {
                     </div>
                   </div>
 
-                  <div className="mb-6">
-                    <label className="mb-2.5 block font-medium text-black dark:text-white">
-                      Re-type Password
-                    </label>
-                    <div className="relative">
-                      <input
-                        type="password"
-                        placeholder="Re-enter your password"
-                        className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
-                      />
-
-                      <span className="absolute right-4 top-4">
-                        <svg
-                          className="fill-current"
-                          width="22"
-                          height="22"
-                          viewBox="0 0 22 22"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <g opacity="0.5">
-                            <path
-                              d="M16.1547 6.80626V5.91251C16.1547 3.16251 14.0922 0.825009 11.4797 0.618759C10.0359 0.481259 8.59219 0.996884 7.52656 1.95938C6.46094 2.92188 5.84219 4.29688 5.84219 5.70626V6.80626C3.84844 7.18438 2.33594 8.93751 2.33594 11.0688V17.2906C2.33594 19.5594 4.19219 21.3813 6.42656 21.3813H15.5016C17.7703 21.3813 19.6266 19.525 19.6266 17.2563V11C19.6609 8.93751 18.1484 7.21876 16.1547 6.80626ZM8.55781 3.09376C9.31406 2.40626 10.3109 2.06251 11.3422 2.16563C13.1641 2.33751 14.6078 3.98751 14.6078 5.91251V6.70313H7.38906V5.67188C7.38906 4.70938 7.80156 3.78126 8.55781 3.09376ZM18.1141 17.2906C18.1141 18.7 16.9453 19.8688 15.5359 19.8688H6.46094C5.05156 19.8688 3.91719 18.7344 3.91719 17.325V11.0688C3.91719 9.52189 5.15469 8.28438 6.70156 8.28438H15.2953C16.8422 8.28438 18.1141 9.52188 18.1141 11V17.2906Z"
-                              fill=""
-                            />
-                            <path
-                              d="M10.9977 11.8594C10.5852 11.8594 10.207 12.2031 10.207 12.65V16.2594C10.207 16.6719 10.5508 17.05 10.9977 17.05C11.4102 17.05 11.7883 16.7063 11.7883 16.2594V12.6156C11.7883 12.2031 11.4102 11.8594 10.9977 11.8594Z"
-                              fill=""
-                            />
-                          </g>
-                        </svg>
-                      </span>
-                    </div>
-                  </div>
 
                   <div className="mb-5">
                     <input

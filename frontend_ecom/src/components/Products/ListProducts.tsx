@@ -1,7 +1,7 @@
 import React from 'react';
 import productData from './products.json'; // Import the JSON data
 
-function ListProducts() {
+function  ListProducts() {
   return (
     <>
     <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">

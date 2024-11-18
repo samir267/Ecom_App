@@ -35,16 +35,26 @@ namespace server.Controllers
         // CREATE : Ajouter un produit
         [HttpPost]
         [HttpPost]
-        public async Task<IActionResult> AddProduct([FromBody] ProductModel product)
+		[Consumes("multipart/form-data")]
+
+		public async Task<IActionResult> AddProduct([FromForm] ProductModel product)
         {
-            // Paramètres d'upload de l'image
-            var uploadParams = new ImageUploadParams
+
+			
+			if (product.Imageform == null || product.Imageform.Length == 0)
+			{
+				return BadRequest(new { message = "Aucune image n'a été téléchargée." });
+			}
+
+			// Paramètres d'upload de l'image
+			var uploadParams = new ImageUploadParams
             {
-                File = new FileDescription(product.Image),
+                File = new FileDescription(product.Imageform.FileName,product.Imageform.OpenReadStream()),
                 UseFilename = true,
                 UniqueFilename = false,
                 Overwrite = true
             };
+
 
             // Tentative d'upload de l'image
             var uploadResult = await _cloudinary.UploadAsync(uploadParams);

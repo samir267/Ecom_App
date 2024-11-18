@@ -5,7 +5,13 @@ import { ClasseProducts } from './ClasseProducts';
 
 
 
+
 const AjouterProduct = () => {
+
+ 
+
+
+
   const [selectedOption, setSelectedOption] = useState<string>('');
   const [isOptionSelected, setIsOptionSelected] = useState<boolean>(false);
   const [productName, setProductName] = useState<string>('');
@@ -15,14 +21,17 @@ const AjouterProduct = () => {
   const [picture, setPicture] = useState<File | null>(null);
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [showError, setShowError] = useState<boolean>(false);
-  const [showSuccess, setShowSuccess] = useState<boolean>(false); // New state for success alert
+  const [showSuccess, setShowSuccess] = useState<boolean>(false);
 
 
+
+ 
+
+  
 
   const changeTextColor = () => {
     setIsOptionSelected(true);
   };
-
   const handleValidation = () => {
     let formErrors: { [key: string]: string } = {};
     if (!productName) formErrors.productName = "Product name is required.";
@@ -36,11 +45,13 @@ const AjouterProduct = () => {
     return Object.keys(formErrors).length === 0;
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (handleValidation()) {
       setShowError(false);
       setShowSuccess(true);
+
+
       const newProduct: ClasseProducts = {
         image: picture,
         productName,
@@ -49,9 +60,40 @@ const AjouterProduct = () => {
         quantity: Number(quantity),
         description,
       }
-      console.log("Product added successfully:", newProduct);
 
-      // Reset form after successful submission
+      const idUser=localStorage.getItem("userId")
+
+
+      const formData = new FormData();
+      formData.append('image', picture as Blob);
+      formData.append('name', productName);
+      formData.append('category', selectedOption);
+      formData.append('price', price);
+      formData.append('quantity', quantity);
+      formData.append('description', description);
+      formData.append('idUser', idUser);
+     
+     
+
+
+      console.log("Product added successfully:", formData);
+      try {
+        const response = await fetch('https://localhost:7223/api/product', {
+          method: 'POST',
+          body: formData,
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            },
+            });
+            const data = await response.json();
+            console.log(data);
+          }
+          catch (error) {
+            console.error(error);
+            }
+            
+           
+
       setProductName('');
       setPrice('');
       setQuantity('');

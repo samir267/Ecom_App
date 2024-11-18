@@ -7,7 +7,7 @@ using server.Dto; // Assurez-vous d'importer le namespace de votre DTO
 namespace server.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+	[Route("api/[controller]")]
     public class UserController : ControllerBase
     {
         private readonly UserService _userService;
