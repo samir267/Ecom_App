@@ -11,6 +11,7 @@ using static server.interfaces.ICartRepositry;
 using server.interfaces;
 using System.Text.Json.Serialization;
 using dotenv.net;
+using CloudinaryDotNet;
 
 DotEnv.Load();
 
@@ -36,6 +37,21 @@ builder.Services.AddScoped<ICartRepositry, CartRepository>();
 builder.Services.AddScoped<ICartService, CartService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<IOrderRepository, OrderRepository>();
+
+
+
+// Configuration pour Cloudinary
+builder.Services.AddSingleton(provider =>
+{
+    var cloudinaryUrl = Environment.GetEnvironmentVariable("CLOUDINARY_URL");
+    if (string.IsNullOrEmpty(cloudinaryUrl))
+    {
+        throw new InvalidOperationException("CLOUDINARY_URL est manquant dans les variables d'environnement.");
+    }
+
+    return new Cloudinary(cloudinaryUrl);
+});
+
 
 // In ConfigureServices method in Startup.cs or directly in Program.cs if using minimal APIs
 builder.Services.AddControllers()
