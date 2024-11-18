@@ -14,16 +14,12 @@ class _HomeScreenState extends State<HomeScreen> {
   int _selectedCategoryIndex = 0;
 
   final List<String> productImages = [
-    'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQQZ73gGY7FekDTWOtmfCuuVCLvhCbOnSWvjw&s',
-    'https://spacenet.tn/165527-large_default/telephone-portable-ipro-a7-mini-bleu.jpg',
-    'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQQZ73gGY7FekDTWOtmfCuuVCLvhCbOnSWvjw&s',
-    'https://spacenet.tn/165527-large_default/telephone-portable-ipro-a7-mini-bleu.jpg',
-    'https://www.bfmtv.com/comparateur/wp-content/uploads/2024/04/Definition-dune-souris-gamer.jpg',
-    'https://www.bfmtv.com/comparateur/wp-content/uploads/2024/04/Definition-dune-souris-gamer.jpg',
-    'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQQZ73gGY7FekDTWOtmfCuuVCLvhCbOnSWvjw&s',
-    'https://spacenet.tn/165527-large_default/telephone-portable-ipro-a7-mini-bleu.jpg',
-    'https://www.bfmtv.com/comparateur/wp-content/uploads/2024/04/Definition-dune-souris-gamer.jpg',
-    'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQQZ73gGY7FekDTWOtmfCuuVCLvhCbOnSWvjw&s',
+    'https://images.pexels.com/photos/90946/pexels-photo-90946.jpeg?cs=srgb&dl=pexels-madebymath-90946.jpg&fm=jpg',
+    'https://images.unsplash.com/photo-1523275335684-37898b6baf30?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8cHJvZHVjdHxlbnwwfHwwfHx8MA%3D%3D',
+    'https://images.unsplash.com/photo-1504274066651-8d31a536b11a?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTV8fHByb2R1Y3QlMjBkZXNjcmlwdGlvbnxlbnwwfHwwfHx8MA%3D%3D',
+    'https://images.pexels.com/photos/90946/pexels-photo-90946.jpeg?cs=srgb&dl=pexels-madebymath-90946.jpg&fm=jpg',
+    'https://static.toiimg.com/thumb/msid-88872085,width-400,resizemode-4/88872085.jpg',
+    'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT3hf_7Cw2cK7ZAup3kJGHWuhmCZbH8VfjDu783-s-y2JWAD5_7F4AueFJrIA9zg8UEOpc&usqp=CAU',
   ];
 
   final List<String> categories = ["All", "Electronics", "Fashion", "Toys", "Sports", "Home"];
@@ -42,17 +38,36 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
+ void _onItemTapped(int index) {
+  setState(() {
+    _selectedIndex = index;
+  });
+
+  // Naviguer vers les pages appropriées
+  switch (index) {
+    case 0:
+      Navigator.pushNamed(context, AppRoutes.home);
+      break;
+    case 1:
+      Navigator.pushNamed(context, AppRoutes.home); // Remplacer par la route des catégories si elle existe
+      break;
+    case 2:
+      Navigator.pushNamed(context, AppRoutes.cartscreen); // Remplacer par la route du panier si elle existe
+      break;
+    case 3:
+      Navigator.pushNamed(context, AppRoutes.profile);
+      break;
+    default:
+      break;
   }
+}
+
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color(0xFFCF0EBE),
+backgroundColor: Colors.blue.shade700, // Remplacer la couleur
         elevation: 0,
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -87,54 +102,78 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         centerTitle: true,
       ),
-      drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
+drawer: Drawer(
+  child: ListView(
+    padding: EdgeInsets.zero,
+    children: [
+      DrawerHeader(
+        decoration: BoxDecoration(
+          color: Colors.blue.shade400,
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            DrawerHeader(
-              decoration: BoxDecoration(
-                color: Color(0xFFCF0EBE),
-              ),
-              child: Text(
-                'Menu',
-                style: TextStyle(color: Colors.white, fontSize: 24),
+            CircleAvatar(
+              radius: 40,
+              backgroundImage: NetworkImage(
+               "https://i.imgur.com/IXnwbLk.png", // Remplacez par l'URL de l'image de profil.
               ),
             ),
-            ListTile(
-              leading: Icon(Icons.home),
-              title: Text('Home',),
-              onTap: () {
-                // Handle Home navigation
-                Navigator.pop(context);
-              },
+            SizedBox(height: 5),
+            Text(
+              'John Doe', // Remplacez par le nom de l'utilisateur.
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
             ),
-            ListTile(
-              leading: Icon(Icons.category),
-              title: Text('Categories'),
-              onTap: () {
-                // Handle Categories navigation
-                Navigator.pop(context);
-              },
-            ),
-            ListTile(
-              leading: Icon(Icons.shopping_cart),
-              title: Text('Cart'),
-              onTap: () {
-                // Handle Cart navigation
-                Navigator.pop(context);
-              },
-            ),
-            ListTile(
-              leading: Icon(Icons.person),
-              title: Text('Profile'),
-              onTap: () {
-                // Handle Profile navigation
-                Navigator.pushNamed(context, AppRoutes.profile);
-              },
+            Text(
+              'johndoe@example.com', // Remplacez par l'email de l'utilisateur.
+              style: TextStyle(
+                color: Colors.white70,
+                fontSize: 14,
+              ),
             ),
           ],
         ),
       ),
+      ListTile(
+        leading: Icon(Icons.home),
+        title: Text('Home'),
+        onTap: () {
+          // Handle Home navigation
+          Navigator.pop(context);
+        },
+      ),
+      ListTile(
+        leading: Icon(Icons.category),
+        title: Text('Categories'),
+        onTap: () {
+          // Handle Categories navigation
+          Navigator.pop(context);
+        },
+      ),
+      ListTile(
+        leading: Icon(Icons.shopping_cart),
+        title: Text('Cart'),
+        onTap: () {
+          // Handle Cart navigation
+          Navigator.pop(context);
+        },
+      ),
+      ListTile(
+        leading: Icon(Icons.person),
+        title: Text('Profile'),
+        onTap: () {
+          // Handle Profile navigation
+          Navigator.pushNamed(context, AppRoutes.profile);
+        },
+      ),
+    ],
+  ),
+),
+
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -171,7 +210,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: _selectedCategoryIndex == index
-                            ? Color(0xFFCF0EBE)
+                            ? Colors.blue.shade400
                             : Colors.grey[200],
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(20),
@@ -250,7 +289,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 "${(index + 1) * 10.0} €",
                                 style: TextStyle(
                                   fontSize: 17,
-                                  color: Color(0xFFCF0EBE),
+                                  color: Colors.blue.shade700,
                                 ),
                               ),
                               Icon(
@@ -271,32 +310,33 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _selectedIndex,
-        onTap: _onItemTapped,
-        backgroundColor: Color(0xFFCF0EBE),
-        selectedItemColor: Color(0xFFCF0EBE),
-        unselectedItemColor: Colors.black,
-        showUnselectedLabels: true,
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: "Home",
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.category),
-            label: "Categories",
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.shopping_cart),
-            label: "Cart",
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: "Profile",
-          ),
-        ],
-      ),
+bottomNavigationBar: BottomNavigationBar(
+  currentIndex: _selectedIndex,
+  onTap: _onItemTapped,
+backgroundColor: Colors.blue.shade400, // Remplacer la couleur
+  selectedItemColor: Colors.blue.shade400,
+  unselectedItemColor: Colors.black,
+  showUnselectedLabels: true,
+  items: const [
+    BottomNavigationBarItem(
+      icon: Icon(Icons.home),
+      label: "Home",
+    ),
+    BottomNavigationBarItem(
+      icon: Icon(Icons.category),
+      label: "Categories",
+    ),
+    BottomNavigationBarItem(
+      icon: Icon(Icons.shopping_cart),
+      label: "Cart",
+    ),
+    BottomNavigationBarItem(
+      icon: Icon(Icons.person),
+      label: "Profile",
+    ),
+  ],
+),
+
     );
   }
 }

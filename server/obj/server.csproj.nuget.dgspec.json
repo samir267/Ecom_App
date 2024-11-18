@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\skander\\Desktop\\test\\Ecom_App\\server\\server.csproj": {}
+    "C:\\Users\\alich\\Desktop\\e-commerce\\Ecom_App\\server\\server.csproj": {}
   },
   "projects": {
-    "C:\\Users\\skander\\Desktop\\test\\Ecom_App\\server\\server.csproj": {
+    "C:\\Users\\alich\\Desktop\\e-commerce\\Ecom_App\\server\\server.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\skander\\Desktop\\test\\Ecom_App\\server\\server.csproj",
+        "projectUniqueName": "C:\\Users\\alich\\Desktop\\e-commerce\\Ecom_App\\server\\server.csproj",
         "projectName": "server",
-        "projectPath": "C:\\Users\\skander\\Desktop\\test\\Ecom_App\\server\\server.csproj",
-        "packagesPath": "C:\\Users\\skander\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\skander\\Desktop\\test\\Ecom_App\\server\\obj\\",
+        "projectPath": "C:\\Users\\alich\\Desktop\\e-commerce\\Ecom_App\\server\\server.csproj",
+        "packagesPath": "C:\\Users\\alich\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\alich\\Desktop\\e-commerce\\Ecom_App\\server\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\skander\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\alich\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -34,11 +34,6 @@
           "warnAsError": [
             "NU1605"
           ]
-        },
-        "restoreAuditProperties": {
-          "enableAudit": "true",
-          "auditLevel": "low",
-          "auditMode": "direct"
         }
       },
       "frameworks": {
@@ -125,7 +120,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.404\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.403\\RuntimeIdentifierGraph.json"
         }
       }
     }

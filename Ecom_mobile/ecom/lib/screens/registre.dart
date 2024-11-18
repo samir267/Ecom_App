@@ -70,7 +70,7 @@ class _SignupPageState extends State<SignupPage> {
           borderRadius: BorderRadius.circular(18),
           borderSide: BorderSide.none,
         ),
-        fillColor: Colors.purple.withOpacity(0.1),
+              fillColor: Colors.blue.shade100,
         filled: true,
         prefixIcon: Icon(icon),
       ),
@@ -130,7 +130,7 @@ class _SignupPageState extends State<SignupPage> {
                   style: ElevatedButton.styleFrom(
                     shape: const StadiumBorder(),
                     padding: const EdgeInsets.symmetric(vertical: 16),
-                    backgroundColor: Colors.purple,
+backgroundColor: Colors.blue.shade400, // Remplacer la couleur
                   ),
                 ),
                 const Center(child: Text("Or")),
@@ -138,7 +138,7 @@ class _SignupPageState extends State<SignupPage> {
                   height: 45,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(25),
-                    border: Border.all(color: Colors.purple),
+                    border: Border.all(color: Colors.blue),
                     boxShadow: [
                       BoxShadow(
                         color: Colors.white.withOpacity(0.5),
@@ -154,7 +154,7 @@ class _SignupPageState extends State<SignupPage> {
                     },
                     child: const Text(
                       "Sign up with Google",
-                      style: TextStyle(color: Colors.purple, fontSize: 15),
+                      style: TextStyle(color: Colors.blue, fontSize: 15),
                     ),
                   ),
                 ),
@@ -169,7 +169,7 @@ class _SignupPageState extends State<SignupPage> {
                       },
                       child: const Text(
                         "Log in",
-                        style: TextStyle(color: Colors.purple),
+                        style: TextStyle(color: Colors.blue),
                       ),
                     )
                   ],

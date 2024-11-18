@@ -35,7 +35,7 @@ class _Splash3State extends State<Splash3> {
     super.initState();
     // Set up a 3-second timer to navigate to the Login page
     Timer(const Duration(seconds: 3), () {
-      Navigator.pushReplacementNamed(context, AppRoutes.registre); // Use named route
+      Navigator.pushReplacementNamed(context, AppRoutes.home); // Use named route
     });
   }
 
